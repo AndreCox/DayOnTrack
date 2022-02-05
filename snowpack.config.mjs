@@ -1,7 +1,7 @@
 /** @type {import("snowpack").SnowpackUserConfig } */
 export default {
   mount: {
-    public: { url: '/', static: true },
+    public: { url: '/', static: true, dot: true },
     src: { url: '/dist' },
   },
   plugins: [
@@ -25,6 +25,6 @@ export default {
     tailwindConfig: './tailwind.config.js',
   },
   buildOptions: {
-    baseUrl: '/DayOnTrack',
+    baseUrl: 'https://andrecox.github.io/DayOnTrack',
   },
 };

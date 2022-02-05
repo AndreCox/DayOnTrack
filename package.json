@@ -1,5 +1,5 @@
 {
-  "homepage": "https://andrecox.github.io/DayOnTrack/",
+  "homepage": "https://andrecox.github.io/DayOnTrack",
   "name": "Andre Cox & Your Name",
   "description": "A simple app to stay on track",
   "version": "0.0.1",
@@ -9,7 +9,7 @@
     "start": "snowpack dev",
     "build": "snowpack build",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build -t",
+    "deploy": "gh-pages -d build -t true",
     "test": "web-test-runner \"src/**/*.test.jsx\"",
     "format": "prettier --write \"src/**/*.{js,jsx}\"",
     "lint": "prettier --check \"src/**/*.{js,jsx}\""

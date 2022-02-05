@@ -1,0 +1,1 @@
+export default "/DayOnTrack/dist/logo.svg";

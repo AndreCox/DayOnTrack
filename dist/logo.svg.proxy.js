@@ -1,1 +1,1 @@
-export default "/DayOnTrack/dist/logo.svg";
+export default "https://andrecox.github.io/DayOnTrack/dist/logo.svg";

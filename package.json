@@ -1,4 +1,10 @@
 {
+  "homepage": "https://andrecox.github.io/DayOnTrack/",
+  "name": "Andre Cox & Your Name",
+  "description": "A simple app to stay on track",
+  "version": "0.0.1",
+  "author": "Andre Cox",
+  "private": true,
   "scripts": {
     "start": "snowpack dev",
     "build": "snowpack build",

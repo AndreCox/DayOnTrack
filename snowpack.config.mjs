@@ -4,7 +4,12 @@ export default {
     public: { url: '/', static: true },
     src: { url: '/dist' },
   },
-  plugins: ['@snowpack/plugin-react-refresh', '@snowpack/plugin-dotenv'],
+  plugins: [
+    '@snowpack/plugin-react-refresh',
+    '@snowpack/plugin-dotenv',
+    ['@snowpack/plugin-sass', {}],
+    '@snowpack/plugin-postcss',
+  ],
   routes: [
     /* Enable an SPA Fallback in development: */
     // {"match": "routes", "src": ".*", "dest": "/index.html"},
@@ -17,9 +22,9 @@ export default {
     /* ... */
   },
   devOptions: {
-    /* ... */
+    tailwindConfig: './tailwind.config.js',
   },
   buildOptions: {
-    /* ... */
+    baseUrl: '/DayOnTrack',
   },
 };

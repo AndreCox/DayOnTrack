@@ -19,8 +19,9 @@ export default {
     // "bundle": true,
   },
   packageOptions: {
-    /* ... */
+    knownEntrypoints: ['@mui/base/', 'react-is', '@mui/base/BackdropUnstyled'],
   },
+
   devOptions: {
     tailwindConfig: './tailwind.config.js',
   },

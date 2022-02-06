@@ -20,7 +20,7 @@ let activeTime = [];
 
 let blockLength = 5; //Minutes per block
 let sessionLength = 3; //In blocks
-let breakLength = 3; //In blocks
+let breakLength = 6; //In blocks
 
 let breakTime = 1;
 let previouslySelectedEvent = undefined;
@@ -117,7 +117,7 @@ const shuffleSessions = (sessions) => {
   let breakBlocks = [];
 
   let sortedSessionsArray = [];
-  console.log('sessions', sessions);
+
   sessions.forEach((block) => {
     if (block.title === 'Break') {
       breakBlocks.push(block);
@@ -129,8 +129,6 @@ const shuffleSessions = (sessions) => {
   console.log('Work blocks: ', workBlocks);
   console.log('Break blocks: ', breakBlocks);
 
-  let workCnt = 0;
-  let breakCnt = 0;
   let addingWork = true;
   let canAddWork = true;
 
@@ -142,7 +140,7 @@ const shuffleSessions = (sessions) => {
       }
 
       let s = [];
-      for (var w = 0; w < sessionLength; w++) {
+      for (var w = 0; w < 4; w++) {
         if (workBlocks[w] === undefined) {
           canAddWork = false;
           break;

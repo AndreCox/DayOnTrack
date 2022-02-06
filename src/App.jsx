@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { HashRouter, Routes, Route, Link } from 'react-router-dom';
 import { styled, useTheme } from '@mui/material/styles';
+import { initializeApp } from 'firebase/app';
+import firebase from 'firebase/compat/app';
+import * as firebaseui from 'firebaseui';
+import 'firebaseui/dist/firebaseui.css';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -21,6 +25,8 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
 import VolumeOffIcon from '@mui/icons-material/VolumeOff';
 import HomeIcon from '@mui/icons-material/Home';
+import Button from '@mui/material/Button';
+import Avatar from '@mui/material/Avatar';
 
 import ProfileImage from './assets/images/profile.jpg';
 
@@ -80,9 +86,52 @@ const DrawerHeader = styled('div')(({ theme }) => ({
   justifyContent: 'flex-end',
 }));
 
+const firebaseConfig = {
+  apiKey: 'AIzaSyDTrdN0Q-HZttr-f_4oXP7g8wK-8HCbuRg',
+  authDomain: 'day-on-track.firebaseapp.com',
+  projectId: 'day-on-track',
+  storageBucket: 'day-on-track.appspot.com',
+  messagingSenderId: '999226928678',
+  appId: '1:999226928678:web:96fb0204be64d8956f40e7',
+  measurementId: 'G-K1WY671BJ6',
+};
+
+const app = firebase.initializeApp(firebaseConfig);
+var ui = new firebaseui.auth.AuthUI(firebase.auth());
+var email = '';
+
 function App() {
+  const [signedIn, setSignedIn] = useState('block');
+
+  firebase.auth().onAuthStateChanged((user) => {
+    if (user) {
+      console.log('User is signed in.');
+      setSignedIn('none');
+      email = user.email;
+    } else {
+      setSignedIn('flex');
+      email = '';
+      ui.start('#firebaseui-auth-container', {
+        signInSuccessUrl: document.location.href,
+        signInOptions: [
+          {
+            provider: firebase.auth.EmailAuthProvider.PROVIDER_ID,
+            signInOptions: [
+              firebase.auth.EmailAuthProvider.EMAIL_PASSWORD_SIGN_IN_METHOD,
+              firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+            ],
+          },
+        ],
+        // Other config options...
+      });
+    }
+  });
+
   const theme = useTheme();
   const [open, setOpen] = useState(false);
+
+  // get users emaill address from firebase
+  //email = firebase.auth().currentUser.email;
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -91,9 +140,53 @@ function App() {
   const handleDrawerClose = () => {
     setOpen(false);
   };
+
+  function stringToColor(string) {
+    let hash = 0;
+    let i;
+
+    /* eslint-disable no-bitwise */
+    for (i = 0; i < string.length; i += 1) {
+      hash = string.charCodeAt(i) + ((hash << 5) - hash);
+    }
+
+    let color = '#';
+
+    for (i = 0; i < 3; i += 1) {
+      const value = (hash >> (i * 8)) & 0xff;
+      color += `00${value.toString(16)}`.substr(-2);
+    }
+    /* eslint-enable no-bitwise */
+
+    return color;
+  }
+
+  function stringAvatar(name) {
+    if (name !== '') {
+      return {
+        sx: {
+          bgcolor: stringToColor(name),
+        },
+        children: `${name[0].toUpperCase()}`,
+      };
+    }
+
+    return {
+      sx: {
+        bgcolor: '#ffffff',
+      },
+      children: `a`,
+    };
+  }
+
   // Return the App component.
   return (
     <Box sx={{ display: 'flex' }}>
+      <div
+        className="absolute w-screen h-screen left-0 right-0 backdrop-brightness-75 flex flex-col justify-center"
+        style={{ zIndex: 100000, display: signedIn }}
+        id="firebaseui-auth-container"
+      />
       <HashRouter>
         <CssBaseline />
         <AppBar position="fixed" open={open}>
@@ -116,11 +209,21 @@ function App() {
             </Toolbar>
             <div className="flex flex-row self-center ml-auto pr-4">
               <div className="flex flex-col self-center mr-2 text-right">
-                <p cl>Andre C</p>
-                <p>test@email.com</p>
+                <p>{email}</p>
+                <div className="flex flex-row flex-shrink justify-end">
+                  <p
+                    className="bg-[#155faa] rounded-md pt-[0.5] pb-[0.5] pl-2 pr-2 hover:bg-[#2988e7] transition-all"
+                    onClick={() => {
+                      firebase.auth().signOut();
+                      location.reload();
+                    }}
+                  >
+                    Sign Out
+                  </p>
+                </div>
               </div>
               <IconButton>
-                <img src={ProfileImage} className="rounded-full h-14" alt="" />
+                <Avatar {...stringAvatar(email)} />
               </IconButton>
             </div>
           </div>
@@ -180,7 +283,7 @@ function App() {
             </List>
           </div>
         </Drawer>
-        <Main open={open}>
+        <Main open={open} onClick={() => setOpen(false)}>
           <DrawerHeader />
 
           <Routes>

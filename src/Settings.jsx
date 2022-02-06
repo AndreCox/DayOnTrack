@@ -8,6 +8,8 @@ import FastfoodIcon from '@mui/icons-material/Fastfood';
 import CoffeeIcon from '@mui/icons-material/Coffee';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import ListItemText from '@mui/material/ListItemText';
+import Settings from '@mui/icons-material/Settings';
+import Divider from '@mui/material/Divider';
 import { Link } from 'react-router-dom';
 
 const SettingsView = () => {
@@ -27,6 +29,15 @@ const SettingsView = () => {
   return (
     <div className="h-screen">
       <List>
+        <ListItem key="Settings">
+          <ListItemIcon>
+            <Settings />
+          </ListItemIcon>
+          <p className="text-xl -ml-4" style={{ color: 'rgba(0, 0, 0, 0.54)' }}>
+            Settings
+          </p>
+        </ListItem>
+        <Divider className="mb-4" />
         {SettingButton({
           name: 'Notifications',
           icon: <NotificationIcon className="mr-4" />,
@@ -34,15 +45,9 @@ const SettingsView = () => {
         })}
 
         {SettingButton({
-          name: 'Work Breaks',
+          name: 'Break Settings',
           icon: <CoffeeIcon className="mr-4" />,
           link: '/settings/workbreaks',
-        })}
-
-        {SettingButton({
-          name: 'Meal Breaks',
-          icon: <FastfoodIcon className="mr-4" />,
-          link: '/settings/mealbreaks',
         })}
 
         {SettingButton({

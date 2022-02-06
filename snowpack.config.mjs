@@ -19,7 +19,24 @@ export default {
     // "bundle": true,
   },
   packageOptions: {
-    knownEntrypoints: ['@mui/base/', 'react-is', '@mui/base/BackdropUnstyled'],
+    knownEntrypoints: [
+      '@mui/base/ModalUnstyled',
+      '@mui/base/BackdropUnstyled',
+      '@mui/base/composeClasses',
+      'react-is',
+      '@mui/base',
+      '@mui/material/Dialog',
+      '@mui/material/Paper',
+      '@mui/material/Popper',
+      '@mui/material/Unstable_TrapFocus',
+      '@mui/material/useMediaQuery',
+      '@mui/material/Grid',
+      '@mui/material/ButtonBase',
+      '@mui/material/Fade',
+      '@mui/material/DialogActions',
+      '@mui/material/DialogContent',
+      '@mui/material/InputAdornment',
+    ],
   },
 
   devOptions: {

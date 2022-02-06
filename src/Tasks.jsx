@@ -20,7 +20,7 @@ let activeTime = [];
 
 let blockLength = 5; //Minutes per block
 let sessionLength = 3; //In blocks
-let breakLength = 1; //In blocks
+let breakLength = 3; //In blocks
 
 let breakTime = 1;
 let previouslySelectedEvent = undefined;
@@ -58,15 +58,15 @@ const createEvent = (_title, _startTime, _endTime) => {
 };
 
 const breakDownTasks = (_tasks) => {
-  let sessions = [];
+  let s = [];
   _tasks.forEach((task) => {
     for (var i = 0; i < task.duration; i++) {
       let newSession = createSession(task.title, blockLength * sessionLength);
-      sessions.push(newSession);
+      s.push(newSession);
     }
   });
 
-  return sessions;
+  return s;
 };
 
 const calculateBreakTime = () => {
@@ -129,41 +129,58 @@ const shuffleSessions = (sessions) => {
   console.log('Work blocks: ', workBlocks);
   console.log('Break blocks: ', breakBlocks);
 
-  function addWork() {
-    let s = [];
-    for (var i = 0; i < sessionLength; i++) {
-      if (workBlocks[i] === undefined) break;
+  let workCnt = 0;
+  let breakCnt = 0;
+  let addingWork = true;
+  let canAddWork = true;
 
-      s.push(workBlocks[i]);
+  for (let i = 0; i < sessions.length; i++) {
+    if (addingWork) {
+      if (!canAddWork) {
+        addingWork = !addingWork;
+        continue;
+      }
+
+      let s = [];
+      for (var w = 0; w < sessionLength; w++) {
+        if (workBlocks[w] === undefined) {
+          canAddWork = false;
+          break;
+        }
+
+        s.push(workBlocks[w]);
+      }
+      workBlocks.splice(0, s.length);
+      sortedSessionsArray.push(s);
+    } else {
+      //Add breaks
+      let b = [];
+      for (var j = 0; j < breakLength; j++) {
+        if (breakBlocks[j] === undefined) break;
+
+        b.push(breakBlocks[j]);
+      }
+      breakBlocks.splice(0, b.length);
+
+      sortedSessionsArray.push(b);
     }
-    workBlocks.splice(0, s.length);
 
-    return s;
+    addingWork = !addingWork;
   }
 
-  function addBreak() {
-    let b = [];
-    for (var i = 0; i < breakLength; i++) {
-      if (workBlocks[i] === undefined) break;
+  console.log('sorted array', sortedSessionsArray);
 
-      b.push(workBlocks[i]);
+  let arrayToReturn = [];
+  let cnt = 0;
+  for (let i = 0; i < sortedSessionsArray.length; i++) {
+    for (let j = 0; j < sortedSessionsArray[i].length; j++) {
+      arrayToReturn[cnt] = sortedSessionsArray[i][j];
+      cnt++;
     }
-    breakBlocks.splice(0, b.length);
-
-    return b;
   }
 
-  // while (sortedSessionsArray.length < sessions.length) {
-  //   let workSession = addWork();
-  //   for (let i = 0; i < workSession.length; i++)
-  //     sortedSessionsArray.push(workSession[i]);
-
-  //   let breakSession = addBreak();
-  //   for (let i = 0; i < breakSession.length; i++)
-  //     sortedSessionsArray.push(breakSession[i]);
-  // }
-
-  return sortedSessionsArray;
+  console.log('final array', arrayToReturn);
+  return arrayToReturn;
 };
 
 const mergeSessions = (sessions) => {
@@ -252,10 +269,9 @@ const TaskView = () => {
     sessions = breakDownTasks(tasks);
 
     sessions = addBreakSessions(sessions);
-    //sessions = shuffleSessions(sessions);
+    sessions = shuffleSessions(sessions);
     sessions = mergeSessions(sessions);
 
-    //sessions = shuffleSessions(sessions);
     eventsArray = makeEventsFromSessions(sessions);
     setEvents(eventsArray);
     console.log('pure event', eventsArray);

@@ -119,7 +119,7 @@ const shuffleSessions = (sessions2) => {
     } else {
       let b = [];
       console.log("break time", breakTime);
-      for (var j = 0; j < breakTime / 5; j++) {
+      for (var j = 0; j < breakLength; j++) {
         if (breakBlocks[j] === void 0)
           break;
         b.push(breakBlocks[j]);

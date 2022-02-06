@@ -1,6 +1,10 @@
 import React, {useState, useEffect} from "../_snowpack/pkg/react.js";
 import {HashRouter, Routes, Route, Link} from "../_snowpack/pkg/react-router-dom.js";
 import {styled, useTheme} from "../_snowpack/pkg/@mui/material/styles.js";
+import {initializeApp} from "../_snowpack/pkg/firebase/app.js";
+import firebase from "../_snowpack/pkg/firebase/compat/app.js";
+import * as firebaseui from "../_snowpack/pkg/firebaseui.js";
+import "../_snowpack/pkg/firebaseui/dist/firebaseui.css.proxy.js";
 import Box from "../_snowpack/pkg/@mui/material/Box.js";
 import Drawer from "../_snowpack/pkg/@mui/material/Drawer.js";
 import CssBaseline from "../_snowpack/pkg/@mui/material/CssBaseline.js";
@@ -21,6 +25,8 @@ import FormControlLabel from "../_snowpack/pkg/@mui/material/FormControlLabel.js
 import Switch from "../_snowpack/pkg/@mui/material/Switch.js";
 import VolumeOffIcon from "../_snowpack/pkg/@mui/icons-material/VolumeOff.js";
 import HomeIcon from "../_snowpack/pkg/@mui/icons-material/Home.js";
+import Button from "../_snowpack/pkg/@mui/material/Button.js";
+import Avatar from "../_snowpack/pkg/@mui/material/Avatar.js";
 import ProfileImage from "./assets/images/profile.jpg.proxy.js";
 import TaskView from "./Tasks.js";
 import SettingsView from "./Settings.js";
@@ -69,7 +75,42 @@ const DrawerHeader = styled("div")(({theme}) => ({
   ...theme.mixins.toolbar,
   justifyContent: "flex-end"
 }));
+const firebaseConfig = {
+  apiKey: "AIzaSyDTrdN0Q-HZttr-f_4oXP7g8wK-8HCbuRg",
+  authDomain: "day-on-track.firebaseapp.com",
+  projectId: "day-on-track",
+  storageBucket: "day-on-track.appspot.com",
+  messagingSenderId: "999226928678",
+  appId: "1:999226928678:web:96fb0204be64d8956f40e7",
+  measurementId: "G-K1WY671BJ6"
+};
+const app = firebase.initializeApp(firebaseConfig);
+var ui = new firebaseui.auth.AuthUI(firebase.auth());
+var email = "";
 function App() {
+  const [signedIn, setSignedIn] = useState("block");
+  firebase.auth().onAuthStateChanged((user) => {
+    if (user) {
+      console.log("User is signed in.");
+      setSignedIn("none");
+      email = user.email;
+    } else {
+      setSignedIn("flex");
+      email = "";
+      ui.start("#firebaseui-auth-container", {
+        signInSuccessUrl: document.location.href,
+        signInOptions: [
+          {
+            provider: firebase.auth.EmailAuthProvider.PROVIDER_ID,
+            signInOptions: [
+              firebase.auth.EmailAuthProvider.EMAIL_PASSWORD_SIGN_IN_METHOD,
+              firebase.auth.GoogleAuthProvider.PROVIDER_ID
+            ]
+          }
+        ]
+      });
+    }
+  });
   const theme = useTheme();
   const [open, setOpen] = useState(false);
   const handleDrawerOpen = () => {
@@ -78,9 +119,42 @@ function App() {
   const handleDrawerClose = () => {
     setOpen(false);
   };
+  function stringToColor(string) {
+    let hash = 0;
+    let i;
+    for (i = 0; i < string.length; i += 1) {
+      hash = string.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    let color = "#";
+    for (i = 0; i < 3; i += 1) {
+      const value = hash >> i * 8 & 255;
+      color += `00${value.toString(16)}`.substr(-2);
+    }
+    return color;
+  }
+  function stringAvatar(name) {
+    if (name !== "") {
+      return {
+        sx: {
+          bgcolor: stringToColor(name)
+        },
+        children: `${name[0].toUpperCase()}`
+      };
+    }
+    return {
+      sx: {
+        bgcolor: "#ffffff"
+      },
+      children: `a`
+    };
+  }
   return /* @__PURE__ */ React.createElement(Box, {
     sx: {display: "flex"}
-  }, /* @__PURE__ */ React.createElement(HashRouter, null, /* @__PURE__ */ React.createElement(CssBaseline, null), /* @__PURE__ */ React.createElement(AppBar, {
+  }, /* @__PURE__ */ React.createElement("div", {
+    className: "absolute w-screen h-screen left-0 right-0 backdrop-brightness-75 flex flex-col justify-center",
+    style: {zIndex: 1e5, display: signedIn},
+    id: "firebaseui-auth-container"
+  }), /* @__PURE__ */ React.createElement(HashRouter, null, /* @__PURE__ */ React.createElement(CssBaseline, null), /* @__PURE__ */ React.createElement(AppBar, {
     position: "fixed",
     open
   }, /* @__PURE__ */ React.createElement("div", {
@@ -101,12 +175,16 @@ function App() {
     className: "flex flex-row self-center ml-auto pr-4"
   }, /* @__PURE__ */ React.createElement("div", {
     className: "flex flex-col self-center mr-2 text-right"
+  }, /* @__PURE__ */ React.createElement("p", null, email), /* @__PURE__ */ React.createElement("div", {
+    className: "flex flex-row flex-shrink justify-end"
   }, /* @__PURE__ */ React.createElement("p", {
-    cl: true
-  }, "Andre C"), /* @__PURE__ */ React.createElement("p", null, "test@email.com")), /* @__PURE__ */ React.createElement(IconButton, null, /* @__PURE__ */ React.createElement("img", {
-    src: ProfileImage,
-    className: "rounded-full h-14",
-    alt: ""
+    className: "bg-[#155faa] rounded-md pt-[0.5] pb-[0.5] pl-2 pr-2 hover:bg-[#2988e7] transition-all",
+    onClick: () => {
+      firebase.auth().signOut();
+      location.reload();
+    }
+  }, "Sign Out"))), /* @__PURE__ */ React.createElement(IconButton, null, /* @__PURE__ */ React.createElement(Avatar, {
+    ...stringAvatar(email)
   }))))), /* @__PURE__ */ React.createElement(Drawer, {
     sx: {
       width: drawerWidth,
@@ -150,7 +228,8 @@ function App() {
   }, /* @__PURE__ */ React.createElement(ListItemIcon, null, /* @__PURE__ */ React.createElement(Settings, null)), /* @__PURE__ */ React.createElement(ListItemText, {
     primary: "Settings"
   })))))), /* @__PURE__ */ React.createElement(Main, {
-    open
+    open,
+    onClick: () => setOpen(false)
   }, /* @__PURE__ */ React.createElement(DrawerHeader, null), /* @__PURE__ */ React.createElement(Routes, null, /* @__PURE__ */ React.createElement(Route, {
     path: "/",
     element: /* @__PURE__ */ React.createElement(TaskView, null)

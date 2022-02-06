@@ -8,6 +8,8 @@ import FastfoodIcon from "../_snowpack/pkg/@mui/icons-material/Fastfood.js";
 import CoffeeIcon from "../_snowpack/pkg/@mui/icons-material/Coffee.js";
 import AccessTimeIcon from "../_snowpack/pkg/@mui/icons-material/AccessTime.js";
 import ListItemText from "../_snowpack/pkg/@mui/material/ListItemText.js";
+import Settings from "../_snowpack/pkg/@mui/icons-material/Settings.js";
+import Divider from "../_snowpack/pkg/@mui/material/Divider.js";
 import {Link} from "../_snowpack/pkg/react-router-dom.js";
 const SettingsView = () => {
   function SettingButton(props) {
@@ -21,24 +23,25 @@ const SettingsView = () => {
   }
   return /* @__PURE__ */ React.createElement("div", {
     className: "h-screen"
-  }, /* @__PURE__ */ React.createElement(List, null, SettingButton({
+  }, /* @__PURE__ */ React.createElement(List, null, /* @__PURE__ */ React.createElement(ListItem, {
+    key: "Settings"
+  }, /* @__PURE__ */ React.createElement(ListItemIcon, null, /* @__PURE__ */ React.createElement(Settings, null)), /* @__PURE__ */ React.createElement("p", {
+    className: "text-xl -ml-4",
+    style: {color: "rgba(0, 0, 0, 0.54)"}
+  }, "Settings")), /* @__PURE__ */ React.createElement(Divider, {
+    className: "mb-4"
+  }), SettingButton({
     name: "Notifications",
     icon: /* @__PURE__ */ React.createElement(NotificationIcon, {
       className: "mr-4"
     }),
     link: "/settings/notifications"
   }), SettingButton({
-    name: "Work Breaks",
+    name: "Break Settings",
     icon: /* @__PURE__ */ React.createElement(CoffeeIcon, {
       className: "mr-4"
     }),
     link: "/settings/workbreaks"
-  }), SettingButton({
-    name: "Meal Breaks",
-    icon: /* @__PURE__ */ React.createElement(FastfoodIcon, {
-      className: "mr-4"
-    }),
-    link: "/settings/mealbreaks"
   }), SettingButton({
     name: "Active hours",
     icon: /* @__PURE__ */ React.createElement(AccessTimeIcon, {

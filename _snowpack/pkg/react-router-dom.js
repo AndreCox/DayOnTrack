@@ -1,5 +1,6 @@
-import { r as react } from './common/index-8af8b000.js';
+import { r as react } from './common/index-c9e50cb4.js';
 import { _ as _extends$1 } from './common/extends-7477639a.js';
+import './common/_commonjsHelpers-913f9c4a.js';
 
 var r,B=r||(r={});B.Pop="POP";B.Push="PUSH";B.Replace="REPLACE";var C=function(b){return b};function E(b){b.preventDefault();b.returnValue="";}
 function F(){var b=[];return {get length(){return b.length},push:function(h){b.push(h);return function(){b=b.filter(function(e){return e!==h});}},call:function(h){b.forEach(function(e){return e&&e(h)});}}}function H(){return Math.random().toString(36).substr(2,8)}function I(b){var h=b.pathname;h=void 0===h?"/":h;var e=b.search;e=void 0===e?"":e;b=b.hash;b=void 0===b?"":b;e&&"?"!==e&&(h+="?"===e.charAt(0)?e:"?"+e);b&&"#"!==b&&(h+="#"===b.charAt(0)?b:"#"+b);return h}

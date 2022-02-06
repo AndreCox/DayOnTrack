@@ -263,6 +263,7 @@ const TaskView = () => {
   }
   sessTime = cookies.sessTime * 5;
   breakTime = cookies.breakTime * 5;
+  console.log('brreaks', cookies.breakTime);
 
   const setSchedule = () => {
     sessions = breakDownTasks(tasks);
